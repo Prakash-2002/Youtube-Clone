@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./PlayVideo.css";
-//import video1 from "../../assets/video.mp4";
+
 import like from "../../assets/like.png";
 import dislike from "../../assets/dislike.png";
 import share from "../../assets/share.png";
 import save from "../../assets/save.png";
-//import jack from "../../assets/jack.png";
-//import user_profile from "../../assets/user_profile.jpg";
+
 import { API_KEY, value_converter } from "../../data";
 import moment from "moment";
 import { useParams } from "react-router-dom";
@@ -16,7 +15,7 @@ const PlayVideo = ({ videoId }) => {
   const [channelData, setChannelData] = useState(null);
   const [commentData, setCommentData] = useState([20]);
 
-  //const {videoId} = useParams();
+  // const {videoId} = useParams();
 
   const fetchVideoData = async () => {
     //fetchingh video data
@@ -31,6 +30,7 @@ const PlayVideo = ({ videoId }) => {
     await fetch(channelData_url)
       .then((response) => response.json())
       .then((data) => setChannelData(data.items[0]));
+      console.log(channelData);
 
     const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${videoId}&key=${API_KEY}`;
     await fetch(comment_url)
@@ -112,7 +112,11 @@ const PlayVideo = ({ videoId }) => {
           Comment
         </h3>
         
-         {commentData.map((item, index) =>{
+         {Array.isArray(commentData)  && commentData.map((item, index) =>{
+
+if (item && item.snippet && item.snippet.topLevelComment) {
+  const topLevelComment = item.snippet.topLevelComment;
+
           return (
             <div key={index} className="comment">
           <img src={item.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="" />
@@ -128,7 +132,10 @@ const PlayVideo = ({ videoId }) => {
             </div>
           </div>
         </div>
-          )
+          )}
+          else {
+            return null; // Return null if the nested properties are undefined
+          }
         })}
         
        
@@ -144,4 +151,3 @@ const PlayVideo = ({ videoId }) => {
 };
 
 export default PlayVideo;
-
