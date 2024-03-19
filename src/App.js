@@ -16,6 +16,8 @@ function App() {
         <Route path="/video/:categoryId/:videoId" element={<Video />} />
         <Route path="/" element={<Home />} />
       </Routes>
+
+  
     </div>
   );
 }
